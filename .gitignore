@@ -1,0 +1,9 @@
+.settings/
+build/
+bin/
+gen/
+out/
+proguard_logs/
+*.apk
+*.iml
+local.properties

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
     <!-- Main settings screen -->
@@ -25,5 +24,14 @@
     <string name="account">Аккаунт</string>
     <string name="uploads">Загрузки</string>
     <string name="quality_auto">Авто</string>
+
+<string name="quality_144p">144p</string>
+    <string name="quality_240p">240p</string>
+    <string name="quality_360p">360p</string>
+    <string name="quality_480p">480p</string>
+    <string name="quality_720p">720p</string>
+    <string name="quality_1080p">1080p</string>
+    <string name="quality_1440p">1440p</string>
+    <string name="quality_2160p">2160p</string>
 
 </resources>

@@ -6,4 +6,4 @@ YTP compile and deploy:
   script:
     - ant clean release
     - NOW=$(date +"%Y-%m-%d_%H-%M-%S")
-    - cp "bin/YourTubePlus.apk" "/home/git/gitlab/public/YouTubePlus/YouTubePlus_$NOW.apk"
+    - cp "bin/YourTubePlus-release.apk" "/home/git/gitlab/public/YouTubePlus/YouTubePlus_$NOW.apk"

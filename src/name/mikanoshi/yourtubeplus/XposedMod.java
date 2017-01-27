@@ -2,6 +2,7 @@ package name.mikanoshi.yourtubeplus;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -29,6 +30,21 @@ public class XposedMod implements IXposedHookLoadPackage {
 	private static boolean sNewVideo = true;
 	private static ArrayList<Integer> sStreamQualities;
 
+	boolean wasStartedFromHome(Intent intent) {
+		return (intent.hasExtra("alias") && intent.getStringExtra("alias").equals("com.google.android.apps.youtube.app.application.Shell$HomeActivity"));
+	}
+	
+	byte[] getEndpoint(ClassLoader clsldr, String pane) {
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", clsldr), "a", pane);
+		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("zji", clsldr), "a", paneObj);
+	}
+	
+	void openPane(ClassLoader clsldr, String pane, Object wwActivity) {
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", clsldr), "a", pane);
+		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("dfk", clsldr), "a", paneObj, true);
+		XposedHelpers.callMethod(wwActivity, "b", paneParcelable);
+	}
+	
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
 		if (!lpparam.packageName.equals("com.google.android.youtube")) return;
@@ -41,9 +57,22 @@ public class XposedMod implements IXposedHookLoadPackage {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				Intent intent = (Intent)param.args[0];
-				if (!intent.hasExtra("alias") || !intent.getStringExtra("alias").equals("com.google.android.apps.youtube.app.application.Shell$HomeActivity")) return;
+				if (!wasStartedFromHome(intent)) return;
 				
 				prefs.reload();
+				// Pane to get back to
+				String paneString = prefs.getString(PREF_DEFAULT_PANE, DEFAULT_PANE);
+				if (paneString.equals("VLWL") || paneString.equals("FEmy_videos"))
+				intent.putExtra("navigation_endpoint", getEndpoint(lpparam.classLoader, "FEaccount"));
+				
+				param.args[0] = intent;
+			}
+			
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Intent intent = (Intent)param.args[0];
+				if (!wasStartedFromHome(intent)) return;
+				
 				String paneString = prefs.getString(PREF_DEFAULT_PANE, DEFAULT_PANE);
 				/*	Pane ID:
 					Trending:				FEtrending
@@ -64,11 +93,12 @@ public class XposedMod implements IXposedHookLoadPackage {
 					paneString = "VL" + prefs.getString(PREF_PLAYLIST, "");
 				else if (paneString.equals(PANE_SUBSCRIPTION))
 					paneString = prefs.getString(PREF_SUBSCRIPTION, "");
-				
-				Object pane = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", lpparam.classLoader), "a", paneString);
-				byte[] panebytes = (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("zji", lpparam.classLoader), "a", pane);
-				intent.putExtra("navigation_endpoint", panebytes);
-				param.args[0] = intent;
+			
+				Activity act = (Activity)param.thisObject;
+				Intent paneIntent = new Intent(act.getBaseContext(), act.getClass());
+				paneIntent.putExtra("navigation_endpoint", getEndpoint(lpparam.classLoader, paneString));
+				paneIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				act.startActivity(paneIntent);
 			}
 		});
 /*		
@@ -76,8 +106,6 @@ public class XposedMod implements IXposedHookLoadPackage {
 		findAndHookMethod("dhj", lpparam.classLoader, "R", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				Object result = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", lpparam.classLoader), "a", paneString);
-				param.setResult(XposedHelpers.callStaticMethod(XposedHelpers.findClass("dhj", lpparam.classLoader), "a", result, true));
 			}
 		});
 */

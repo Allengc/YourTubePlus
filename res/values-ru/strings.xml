@@ -13,6 +13,10 @@
     <string name="pref_override_device_support_summary">Экспериментально. Отключает проверку поддержки устройством 720p, 1080p, 1440p и 2160p.</string>
     <string name="pref_support_title">Поддержка</string>
     <string name="pref_show_app_icon_title">Иконка модуля в ланчере</string>
+    <string name="about_action">О модуле</string>
+    <string name="about_version">Вресия</string>
+    <string name="about_donate">Донат</string>
+    <string name="about_close">Закрыть</string>
 
     <!-- List entries -->
     <string name="what_to_watch">Главная</string>

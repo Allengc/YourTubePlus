@@ -1,18 +1,30 @@
 package name.mikanoshi.yourtubeplus;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
 import name.mikanoshi.yourtubeplus.R;
 
 public class SettingsActivity extends Activity {
 	private static final String PANE_PLAYLIST = "0";
 	private static final String PANE_SUBSCRIPTION = "1";
+	
+	public static AlertDialog aboutdlg;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -20,13 +32,25 @@ public class SettingsActivity extends Activity {
 		if (savedInstanceState == null)
 		getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actions, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		aboutdlg.show();
+		return true;
+	}
 
 	public static class PrefsFragment extends PreferenceFragment {
-		@SuppressWarnings("deprecation")
 		@Override
+		@SuppressLint("InflateParams")
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
+			getPreferenceManager().setSharedPreferencesMode(1);
 			addPreferencesFromResource(R.xml.preferences);
 
 			ListPreference defaultPanePref = (ListPreference) findPreference("pref_default_pane");
@@ -66,6 +90,42 @@ public class SettingsActivity extends Activity {
 					return true;
 				}
 			});
+			
+			final Activity context = getActivity();
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+			View dialogView = context.getLayoutInflater().inflate(R.layout.about, null);
+			TextView ver = (TextView)dialogView.findViewById(R.id.textViewVersion);
+			try {
+				ver.setText(getResources().getString(R.string.about_version) + ": " + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+			} catch (Exception e) {}
+			Button close = (Button)dialogView.findViewById(R.id.buttonClose);
+			close.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					aboutdlg.dismiss();
+				}
+			});
+			Button support = (Button)dialogView.findViewById(R.id.buttonSupport);
+			support.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://forum.xda-developers.com/xposed/modules/yourtube-t3544684"));
+					if (uriIntent.resolveActivity(context.getPackageManager()) != null)
+					context.startActivity(uriIntent);
+				}
+			});
+			Button donate = (Button)dialogView.findViewById(R.id.buttonDonate);
+			donate.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sensetoolbox.com/donate"));
+					if (uriIntent.resolveActivity(context.getPackageManager()) != null)
+					context.startActivity(uriIntent);
+				}
+			});
+			
+			dialogBuilder.setView(dialogView);
+			aboutdlg = dialogBuilder.create();
 		}
 	}
 }

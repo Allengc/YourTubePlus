@@ -1,0 +1,15 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<style name="AppTheme" parent="android:Theme.Material">
+        <item name="android:colorPrimary">@color/ytred</item>
+	    <item name="android:colorPrimaryDark">@color/ytreddark</item>
+	    <item name="android:colorAccent">@color/ytred</item>
+	    <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
+    </style>
+    
+	<style name="AlertDialogCustom" parent="android:Theme.Material.Dialog.Alert">
+		<item name="android:colorPrimary">@color/ytred</item>
+		<item name="android:colorAccent">@color/ytred</item>
+	</style>
+
+</resources>

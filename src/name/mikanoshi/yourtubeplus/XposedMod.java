@@ -3,6 +3,7 @@ package name.mikanoshi.yourtubeplus;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -36,9 +37,12 @@ public class XposedMod implements IXposedHookLoadPackage {
 
 		// Default pane.
 
-		findAndHookMethod("dhj", lpparam.classLoader, "R", new XC_MethodHook() {
+		findAndHookMethod("com.google.android.apps.youtube.app.WatchWhileActivity", lpparam.classLoader, "a", Intent.class, boolean.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				Intent intent = (Intent)param.args[0];
+				if (!intent.hasExtra("alias") || !intent.getStringExtra("alias").equals("com.google.android.apps.youtube.app.application.Shell$HomeActivity")) return;
+				
 				prefs.reload();
 				String paneString = prefs.getString(PREF_DEFAULT_PANE, DEFAULT_PANE);
 				/*	Pane ID:
@@ -48,9 +52,9 @@ public class XposedMod implements IXposedHookLoadPackage {
 					Browse channels:		FEguide_builder
 					Uploads:				FEmy_videos
 					Account:				FEaccount
+					Shared:					FEshared
 					Library:				FElibrary (same as account?)
-					Shared:					FEshared (blank page)
-					Add audio tracks:		FEaudio_tracks (blank too)
+					Add audio tracks:		FEaudio_tracks (blank)
 					Watch Later:			VLWL
 					Playlist:				VL + <playlist_id> (get playlist id from: https://www.youtube.com/playlist?list=playlist_id)
 					Liked videos:			same as above
@@ -60,12 +64,23 @@ public class XposedMod implements IXposedHookLoadPackage {
 					paneString = "VL" + prefs.getString(PREF_PLAYLIST, "");
 				else if (paneString.equals(PANE_SUBSCRIPTION))
 					paneString = prefs.getString(PREF_SUBSCRIPTION, "");
-
+				
+				Object pane = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", lpparam.classLoader), "a", paneString);
+				byte[] panebytes = (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("zji", lpparam.classLoader), "a", pane);
+				intent.putExtra("navigation_endpoint", panebytes);
+				param.args[0] = intent;
+			}
+		});
+/*		
+		// Returns pane to be used in original method above
+		findAndHookMethod("dhj", lpparam.classLoader, "R", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				Object result = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ond", lpparam.classLoader), "a", paneString);
 				param.setResult(XposedHelpers.callStaticMethod(XposedHelpers.findClass("dhj", lpparam.classLoader), "a", result, true));
 			}
 		});
-
+*/
 		// Override compatibility checks
 
 		XC_MethodHook deviceSupportHook = new XC_MethodHook() {

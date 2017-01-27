@@ -11,6 +11,7 @@
         <item>@string/subscription</item>
         <item>@string/browse_channels</item>
         <item>@string/account</item>
+        <item>@string/shared</item>
         <item>@string/uploads</item>
     </string-array>
 
@@ -23,6 +24,7 @@
         <item>1</item>
         <item>FEguide_builder</item>
         <item>FEaccount</item>
+        <item>FEshared</item>
         <item>FEmy_videos</item>
 	</string-array>
 

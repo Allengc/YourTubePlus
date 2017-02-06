@@ -4,6 +4,7 @@ types:
 YTP compile and deploy:
   type: deploy
   script:
+    - cp -Rfp res/values-he res/values-iw
     - ant clean release
     - NOW=$(date +"%Y-%m-%d_%H-%M-%S")
     - cp "bin/YourTubePlus-release.apk" "/home/git/gitlab/public/YourTubePlus/YourTubePlus_$NOW.apk"

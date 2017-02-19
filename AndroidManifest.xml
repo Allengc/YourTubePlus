@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="name.mikanoshi.yourtubeplus"
-    android:versionCode="4"
-    android:versionName="12.03.57">
+    android:versionCode="5"
+    android:versionName="12.05.53">
 
     <uses-sdk
         android:minSdkVersion="16"

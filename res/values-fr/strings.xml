@@ -8,7 +8,7 @@
     <string name="pref_playlist_title">ID playlists</string>
     <string name="pref_subscription_title">ID abonnements</string>
     <string name="pref_maximum_stream_quality_title">Qualité maximale par défaut</string>
-    <string name="pref_override_device_support_title">Outrepasser supporté par l\'appareil</string>
+    <string name="pref_override_device_support_title">Outrepasser le support de l\'appareil</string>
     <string name="pref_override_device_support_summary">Expérimental. Ignorer la vérification de compatibilité 720p, 1080p, 1440p
         et 2160p.</string>    
     <string name="pref_support_title">Support</string>

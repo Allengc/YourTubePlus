@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
     <!-- Main settings screen -->
@@ -32,4 +31,13 @@
     <string name="quality_1440p">1440p</string>
     <string name="quality_2160p">2160p</string>
 
-</resources>
+<string name="about_action">A propos</string>
+    <string name="about_version">Version</string>
+    <string name="about_donate">Don</string>
+    <string name="about_close">Fermer</string>
+
+    <string name="trending">Tendances</string>
+    <string name="account">Compte</string>
+    <string name="shared">Partager</string>
+    <string name="uploads">Envois</string>
+    </resources>

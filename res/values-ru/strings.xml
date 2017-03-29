@@ -39,4 +39,6 @@
     <string name="quality_1440p">1440p</string>
     <string name="quality_2160p">2160p</string>
 
-</resources>
+<string name="pref_autoloop_title">Автоматически проигрывать видео снова</string>
+    <string name="pref_autoloop_summary">Не распространяется на плейлисты</string>
+    </resources>

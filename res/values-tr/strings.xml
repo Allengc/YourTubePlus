@@ -34,4 +34,6 @@
     <string name="quality_1440p">1440p</string>
     <string name="quality_2160p">2160p</string>
 
-</resources>
+<string name="pref_autoloop_title">Videoyu otomatik yeniden oynat</string>
+    <string name="pref_autoloop_summary">Çalma listeleri için geçerli değildir</string>
+    </resources>

@@ -150,7 +150,26 @@ public class XposedMod implements IXposedHookLoadPackage {
 				callMethod(getObjectField(param.thisObject, "av"), "a"); // Play video again
 			}
 		});
-/* 
+
+		// Video ended in background mode
+		findAndHookMethod("com.google.android.libraries.youtube.player.background.service.BackgroundPlayerService", lpparam.classLoader, "handleYouTubePlayerStateEvent", "uih", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				if ((Integer)XposedHelpers.getObjectField(param.args[0], "a") == 7) {
+					prefs.reload();
+					if (prefs.getBoolean(PREF_AUTOLOOP, false))
+					callMethod(getObjectField(param.thisObject, "b"), "a"); // Play video again
+				}
+			}
+		});
+/*		
+		findAndHookMethod("com.google.android.libraries.youtube.player.background.service.BackgroundPlayerService", lpparam.classLoader, "handleVideoStageEvent", "uie", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				XposedBridge.log("handleVideoStageEvent() e: " + (String)XposedHelpers.getObjectField(param.args[0], "e")); // video id
+			}
+		});
+		
 		// Rotate
 		findAndHookMethod("dtc", lpparam.classLoader, "a", "csq", "csq", new XC_MethodHook() {
 			@Override
@@ -201,7 +220,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 				}    
 			}
 		});
-/*        
+/*
 		findAndHookMethod("eqd", lpparam.classLoader, "handlePendingVideoQualityChangeEvent", "ugs", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {}

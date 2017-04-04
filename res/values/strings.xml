@@ -31,6 +31,7 @@
     <string name="account">Account</string>
     <string name="shared">Shared</string>
     <string name="uploads">Uploads</string>
+    <string name="quality_skip">Unchanged</string>
     <string name="quality_auto">Auto</string>
     <string name="quality_144p">144p</string>
     <string name="quality_240p">240p</string>

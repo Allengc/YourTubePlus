@@ -29,6 +29,7 @@
 	</string-array>
 
     <string-array name="quality_entries">
+        <item>@string/quality_skip</item>
         <item>@string/quality_auto</item>
         <item>@string/quality_144p</item>
         <item>@string/quality_240p</item>
@@ -42,6 +43,7 @@
 
     <string-array name="quality_values">
         <item>-2</item>
+        <item>0</item>
         <item>144</item>
         <item>240</item>
         <item>360</item>

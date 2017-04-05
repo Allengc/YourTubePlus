@@ -3,8 +3,10 @@ package name.mikanoshi.yourtubeplus;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -51,8 +53,21 @@ public class XposedMod implements IXposedHookLoadPackage {
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
 		if (!lpparam.packageName.equals("com.google.android.youtube")) return;
 
+		if (Build.VERSION.SDK_INT >= 21)
+			hookEverything(lpparam);
+		else
+			XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					hookEverything(lpparam);
+				}
+			});
+	}
+	
+	public void hookEverything(final LoadPackageParam lpparam) {
+		
 		final XSharedPreferences prefs = new XSharedPreferences("name.mikanoshi.yourtubeplus");
-
+		
 		// Default pane.
 
 		findAndHookMethod("com.google.android.apps.youtube.app.WatchWhileActivity", lpparam.classLoader, "a", Intent.class, boolean.class, new XC_MethodHook() {
@@ -95,7 +110,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 					paneString = "VL" + prefs.getString(PREF_PLAYLIST, "");
 				else if (paneString.equals(PANE_SUBSCRIPTION))
 					paneString = prefs.getString(PREF_SUBSCRIPTION, "");
-			
+				
 				Activity act = (Activity)param.thisObject;
 				Intent paneIntent = new Intent(act.getBaseContext(), act.getClass());
 				paneIntent.putExtra("navigation_endpoint", getEndpoint(lpparam.classLoader, paneString));
@@ -140,7 +155,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 				sNewVideo = true;
 			}
 		});
-       
+
 		// Video ended
 		findAndHookMethod("dtc", lpparam.classLoader, "G", new XC_MethodHook() {
 			@Override
@@ -199,6 +214,11 @@ public class XposedMod implements IXposedHookLoadPackage {
 						-2 is used for "Auto".
 						Other qualities have their respective values (e.g. 720, 1080, etc). */
 					int maximumStreamQuality = Integer.parseInt(prefs.getString(PREF_MAXIMUM_STREAM_QUALITY, DEFAULT_STREAM_QUALITY));
+					if (maximumStreamQuality == 0) {
+						param.args[1] = 0;
+						return;
+					}
+						
 					int quality = -2;
 					for (int streamQuality: sStreamQualities)
 					if (streamQuality <= maximumStreamQuality) quality = streamQuality;

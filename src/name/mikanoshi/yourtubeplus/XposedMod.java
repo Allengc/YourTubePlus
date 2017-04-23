@@ -7,6 +7,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -25,6 +26,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 	private static final String PREF_SUBSCRIPTION = "pref_subscription";
 	private static final String PREF_OVERRIDE_DEVICE_SUPPORT = "pref_override_device_support";
 	private static final String PREF_MAXIMUM_STREAM_QUALITY = "pref_maximum_stream_quality";
+	private static final String PREF_NO_UPDATE = "pref_disable_update_screen";
 	private static final String PREF_AUTOLOOP = "pref_autoloop";
 	private static final String DEFAULT_PANE = "FEsubscriptions";
 	private static final String DEFAULT_STREAM_QUALITY = "-2";
@@ -39,16 +41,16 @@ public class XposedMod implements IXposedHookLoadPackage {
 	}
 	
 	byte[] getEndpoint(ClassLoader clsldr, String pane) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pmd", clsldr), "a", pane);
-		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("abda", clsldr), "toByteArray", paneObj);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pdj", clsldr), "a", pane);
+		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("abod", clsldr), "toByteArray", paneObj);
 	}
-	
+/*	
 	void openPane(ClassLoader clsldr, String pane, Object wwActivity) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pmd", clsldr), "a", pane);
-		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("dpq", clsldr), "a", paneObj, true);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pdj", clsldr), "a", pane);
+		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("dor", clsldr), "a", paneObj, true);
 		XposedHelpers.callMethod(wwActivity, "b", paneParcelable);
 	}
-	
+*/	
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
 		if (!lpparam.packageName.equals("com.google.android.youtube")) return;
@@ -120,7 +122,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 /*		
 		// Returns pane to be used in original method above
-		findAndHookMethod("dpq", lpparam.classLoader, "R", new XC_MethodHook() {
+		findAndHookMethod("dor", lpparam.classLoader, "R", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 			}
@@ -138,73 +140,84 @@ public class XposedMod implements IXposedHookLoadPackage {
 		};
 
 		try {
-			findAndHookMethod("nth", lpparam.classLoader, "a", int.class, deviceSupportHook);
-			findAndHookMethod("nth", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
+			findAndHookMethod("nxb", lpparam.classLoader, "a", int.class, deviceSupportHook);
+			findAndHookMethod("nxb", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
 		} catch(Throwable t)  {
 			XposedBridge.log(t);
 		}
-
-		// Default resolution.
-
-		// We don't want to override the resolution when it's manually changed by the user, so we need to know
-		// if the video was just opened (in which case the next time the resolution is set would be automatic) or not.
-		findAndHookMethod("dtc", lpparam.classLoader, "E", new XC_MethodHook() {
+		
+		// Skip update screen
+		
+		findAndHookMethod("com.google.android.apps.youtube.app.application.upgrade.NewVersionAvailableActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				//XposedBridge.log("sNewVideo = true");
-				sNewVideo = true;
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				prefs.reload();
+				if (prefs.getBoolean(PREF_NO_UPDATE, false)) {
+					XposedHelpers.callMethod(param.thisObject, "f");
+					XposedHelpers.callMethod(param.thisObject, "h");
+				}
+				
 			}
 		});
+		
+		// Auto repeat
 
 		// Video ended
-		findAndHookMethod("dtc", lpparam.classLoader, "G", new XC_MethodHook() {
+		findAndHookMethod("dsc", lpparam.classLoader, "U", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				prefs.reload();
 				if (prefs.getBoolean(PREF_AUTOLOOP, false))
-				callMethod(getObjectField(param.thisObject, "av"), "a"); // Play video again
+				callMethod(getObjectField(param.thisObject, "as"), "a"); // Play video again
 			}
 		});
 
 		// Video ended in background mode
-		findAndHookMethod("com.google.android.libraries.youtube.player.background.service.BackgroundPlayerService", lpparam.classLoader, "handleYouTubePlayerStateEvent", "uih", new XC_MethodHook() {
+		findAndHookMethod("com.google.android.libraries.youtube.player.background.service.BackgroundPlayerService", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				if ((Integer)XposedHelpers.getObjectField(param.args[0], "a") == 7) {
+				if ((Integer)param.args[2] == 3 && (Integer)XposedHelpers.getObjectField(param.args[1], "a") == 7) {
 					prefs.reload();
 					if (prefs.getBoolean(PREF_AUTOLOOP, false))
 					callMethod(getObjectField(param.thisObject, "b"), "a"); // Play video again
 				}
 			}
 		});
-/*		
-		findAndHookMethod("com.google.android.libraries.youtube.player.background.service.BackgroundPlayerService", lpparam.classLoader, "handleVideoStageEvent", "uie", new XC_MethodHook() {
+				
+		// Default resolution.
+
+		// We don't want to override the resolution when it's manually changed by the user, so we need to know
+		// if the video was just opened (in which case the next time the resolution is set would be automatic) or not.
+		findAndHookMethod("dsc", lpparam.classLoader, "T", new XC_MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				XposedBridge.log("handleVideoStageEvent() e: " + (String)XposedHelpers.getObjectField(param.args[0], "e")); // video id
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				//XposedBridge.log("sNewVideo = true");
+				sNewVideo = true;
 			}
 		});
-		
+/*		
 		// Rotate
-		findAndHookMethod("dtc", lpparam.classLoader, "a", "csq", "csq", new XC_MethodHook() {
+		findAndHookMethod("dsc", lpparam.classLoader, "a", "cqz", "cqz", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {}
 		});
 */
 		// We also want to get a list of the available qualities for this video, because the one that is passed below is localized, so not comparable easily.
-		findAndHookMethod("vgv", lpparam.classLoader, "handleFormatStreamChangeEvent", "sph", new XC_MethodHook() {
+		findAndHookMethod("vbm", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				Object[] info = (Object[])getObjectField(param.args[0], "e");
-				sStreamQualities = new ArrayList<Integer>();
-				for (Object streamQuality: info)
-				sStreamQualities.add(getIntField(streamQuality, "a"));
-				//XposedBridge.log("Available resolutions: " + sStreamQualities.toString());
+				if ((Integer)param.args[2] == 0) {
+					Object[] info = (Object[])getObjectField(param.args[1], "e");
+					sStreamQualities = new ArrayList<Integer>();
+					for (Object streamQuality: info)
+					sStreamQualities.add(getIntField(streamQuality, "a"));
+					//XposedBridge.log("Available resolutions: " + sStreamQualities.toString());
+				}
 			}
 		});
 
 		// Override the default quality
-		findAndHookMethod("eqd", lpparam.classLoader, "a", "prm[]", int.class, new XC_MethodHook() {
+		findAndHookMethod("gaf", lpparam.classLoader, "a", "phr[]", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (sNewVideo) {
@@ -235,19 +248,14 @@ public class XposedMod implements IXposedHookLoadPackage {
 						not the *actual* quality. */
 
 					// This method is the one called when the user presses the button, and actually causes the quality to change.
-					callMethod(getObjectField(getObjectField(param.thisObject, "c"), "aa"), "a", quality);
+					callMethod(getObjectField(param.thisObject, "W"), "a", quality);
 					//XposedBridge.log("New quality: " + String.valueOf(quality));
 				}    
 			}
 		});
 /*
-		findAndHookMethod("eqd", lpparam.classLoader, "handlePendingVideoQualityChangeEvent", "ugs", new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {}
-		});
-
 		// Method for different video events
-		findAndHookMethod("euc", lpparam.classLoader, "k", new XC_MethodHook() {
+		findAndHookMethod("etu", lpparam.classLoader, "k", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				int x = ((Enum<?>)getObjectField(getObjectField(param.thisObject, "ay"), "a")).ordinal();
@@ -257,10 +265,10 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 
 		// Click on play/pause/replay button
-		findAndHookMethod("euc", lpparam.classLoader, "onClick", View.class, new XC_MethodHook() {
+		findAndHookMethod("etu", lpparam.classLoader, "onClick", View.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				XposedBridge.log("euk onClick() " + ((View)param.args[0]).toString());
+				XposedBridge.log("etu onClick() " + ((View)param.args[0]).toString());
 			}
 		});
 */

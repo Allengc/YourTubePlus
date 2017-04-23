@@ -13,6 +13,8 @@
     <string name="pref_autoloop_summary">Does not apply to playlists</string>
     <string name="pref_override_device_support_title">Override device support</string>
     <string name="pref_override_device_support_summary">Experimental. Override 720p, 1080p, 1440p and 2160p compatibility checks.</string>
+    <string name="pref_disable_update_screen_title">Skip update screen</string>
+    <string name="pref_disable_update_screen_summary">Disable update reminder that is displayed on YouTube launch.</string>
     <string name="pref_support_title">Support</string>
     <string name="pref_show_app_icon_title">Show launcher icon</string>
     <string name="about_action">About</string>

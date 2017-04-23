@@ -42,4 +42,6 @@
 <string name="pref_autoloop_title">Автоматически проигрывать видео снова</string>
     <string name="pref_autoloop_summary">Не распространяется на плейлисты</string>
     <string name="quality_skip">Без изменений</string>
+    <string name="pref_disable_update_screen_title">Пропустить экран обновления</string>
+    <string name="pref_disable_update_screen_summary">Отключить показ уведомления о новой версии YouTube при запуске.</string>
     </resources>

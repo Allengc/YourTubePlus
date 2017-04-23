@@ -26,18 +26,24 @@
         android:defaultValue="-2"
         android:entries="@array/quality_entries"
         android:entryValues="@array/quality_values" />
-    
+
 	<CheckBoxPreference
         android:defaultValue="false"
         android:key="pref_autoloop"
         android:title="@string/pref_autoloop_title"
         android:summary="@string/pref_autoloop_summary" />
-	
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="pref_override_device_support"
         android:title="@string/pref_override_device_support_title"
         android:summary="@string/pref_override_device_support_summary" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="pref_disable_update_screen"
+        android:title="@string/pref_disable_update_screen_title"
+        android:summary="@string/pref_disable_update_screen_summary" />
 
     <CheckBoxPreference
         android:defaultValue="true"

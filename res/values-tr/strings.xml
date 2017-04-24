@@ -37,4 +37,6 @@
 <string name="pref_autoloop_title">Videoyu otomatik yeniden oynat</string>
     <string name="pref_autoloop_summary">Çalma listeleri için geçerli değildir</string>
     <string name="quality_skip">Değiştirilmemiş</string>
+    <string name="pref_disable_update_screen_title">Güncelleme ekranını atla</string>
+    <string name="pref_disable_update_screen_summary">YouTube başlatıldığında görüntülenen güncelleme hatırlatıcıyı devre dışı bırak.</string>
     </resources>

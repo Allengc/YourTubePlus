@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
     <!-- Main settings screen -->
@@ -32,4 +31,18 @@
     <string name="quality_1440p">1440p</string>
     <string name="quality_2160p">2160p</string>
 
-</resources>
+<string name="pref_autoloop_title">Speel video automatisch opnieuw af</string>
+    <string name="pref_disable_update_screen_title">Sla update scherm over</string>
+    <string name="pref_disable_update_screen_summary">Stop de update herinnering weergegeven als YouTube opstart.</string>
+    <string name="about_action">Over</string>
+    <string name="about_version">Versie</string>
+    <string name="about_donate">Doneer</string>
+    <string name="about_close">Sluit</string>
+
+    <string name="trending">Populair</string>
+    <string name="account">Account</string>
+    <string name="shared">Gedeelt</string>
+    <string name="uploads">Uploads</string>
+    <string name="quality_skip">Onveranderd</string>
+    <string name="pref_autoloop_summary">Wordt niet gebruikt op playlists</string>
+    </resources>

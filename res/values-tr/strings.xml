@@ -39,4 +39,6 @@
     <string name="quality_skip">Değiştirilmemiş</string>
     <string name="pref_disable_update_screen_title">Güncelleme ekranını atla</string>
     <string name="pref_disable_update_screen_summary">YouTube başlatıldığında görüntülenen güncelleme hatırlatıcıyı devre dışı bırak.</string>
+    <string name="history">Geçmiş</string>
+    <string name="notifications">Bildirimler</string>
     </resources>

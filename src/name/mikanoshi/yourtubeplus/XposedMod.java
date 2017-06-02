@@ -41,13 +41,13 @@ public class XposedMod implements IXposedHookLoadPackage {
 	}
 	
 	byte[] getEndpoint(ClassLoader clsldr, String pane) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pki", clsldr), "a", pane);
-		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("aces", clsldr), "toByteArray", paneObj);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("prh", clsldr), "a", pane);
+		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("actr", clsldr), "toByteArray", paneObj);
 	}
 /*	
 	void openPane(ClassLoader clsldr, String pane, Object wwActivity) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("pki", clsldr), "a", pane);
-		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("dpp", clsldr), "a", paneObj, true);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("prh", clsldr), "a", pane);
+		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("dyg", clsldr), "a", paneObj, true);
 		XposedHelpers.callMethod(wwActivity, "b", paneParcelable);
 	}
 */	
@@ -124,7 +124,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 /*		
 		// Returns pane to be used in original method above
-		findAndHookMethod("dpp", lpparam.classLoader, "R", new XC_MethodHook() {
+		findAndHookMethod("dyg", lpparam.classLoader, "R", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 			}
@@ -142,8 +142,8 @@ public class XposedMod implements IXposedHookLoadPackage {
 		};
 
 		try {
-			findAndHookMethod("odk", lpparam.classLoader, "a", int.class, deviceSupportHook);
-			findAndHookMethod("odk", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
+			findAndHookMethod("okd", lpparam.classLoader, "a", int.class, deviceSupportHook);
+			findAndHookMethod("okd", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
 		} catch(Throwable t)  {
 			XposedBridge.log(t);
 		}
@@ -165,12 +165,12 @@ public class XposedMod implements IXposedHookLoadPackage {
 		// Auto repeat
 
 		// Video ended
-		findAndHookMethod("dtb", lpparam.classLoader, "V", new XC_MethodHook() {
+		findAndHookMethod("ebs", lpparam.classLoader, "V", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				prefs.reload();
 				if (prefs.getBoolean(PREF_AUTOLOOP, false))
-				callMethod(getObjectField(param.thisObject, "au"), "a"); // Play video again
+				callMethod(getObjectField(param.thisObject, "aw"), "a"); // Play video again
 			}
 		});
 
@@ -190,7 +190,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 
 		// We don't want to override the resolution when it's manually changed by the user, so we need to know
 		// if the video was just opened (in which case the next time the resolution is set would be automatic) or not.
-		findAndHookMethod("dtb", lpparam.classLoader, "U", new XC_MethodHook() {
+		findAndHookMethod("ebs", lpparam.classLoader, "U", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//XposedBridge.log("sNewVideo = true");
@@ -199,13 +199,13 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 /*		
 		// Rotate
-		findAndHookMethod("dtb", lpparam.classLoader, "a", "csb", "csb", new XC_MethodHook() {
+		findAndHookMethod("ebs", lpparam.classLoader, "a", "cuc", "cuc", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {}
 		});
 */
 		// We also want to get a list of the available qualities for this video, because the one that is passed below is localized, so not comparable easily.
-		findAndHookMethod("vlp", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("vwj", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if ((Integer)param.args[2] == 0) {
@@ -219,7 +219,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 
 		// Override the default quality
-		findAndHookMethod("gcw", lpparam.classLoader, "a", "poq[]", int.class, new XC_MethodHook() {
+		findAndHookMethod("gfr", lpparam.classLoader, "a", "pvo[]", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (sNewVideo) {
@@ -257,20 +257,20 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 /*
 		// Method for different video events
-		findAndHookMethod("evh", lpparam.classLoader, "k", new XC_MethodHook() {
+		findAndHookMethod("eyb", lpparam.classLoader, "l", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				int x = ((Enum<?>)getObjectField(getObjectField(param.thisObject, "ay"), "a")).ordinal();
+				int x = ((Enum<?>)getObjectField(getObjectField(param.thisObject, "az"), "a")).ordinal();
 				if (x == 5) return; // Video ended (fires 5 times)
 				callMethod(getObjectField(param.thisObject, "a"), "j"); // Play video again
 			}
 		});
 
 		// Click on play/pause/replay button
-		findAndHookMethod("evh", lpparam.classLoader, "onClick", View.class, new XC_MethodHook() {
+		findAndHookMethod("eyb", lpparam.classLoader, "onClick", View.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				XposedBridge.log("evh onClick() " + ((View)param.args[0]).toString());
+				XposedBridge.log("eyb onClick() " + ((View)param.args[0]).toString());
 			}
 		});
 */

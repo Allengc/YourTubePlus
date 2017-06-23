@@ -10,7 +10,7 @@
         <item>@string/playlist</item>
         <item>@string/subscription</item>
         <item>@string/browse_channels</item>
-        <item>@string/account</item>
+        <item>@string/library</item>
         <item>@string/shared</item>
         <item>@string/uploads</item>
         <item>@string/history</item>
@@ -25,7 +25,7 @@
         <item>0</item>
         <item>1</item>
         <item>FEguide_builder</item>
-        <item>FEaccount</item>
+        <item>FElibrary</item>
         <item>FEshared</item>
         <item>FEmy_videos</item>
         <item>FEhistory</item>

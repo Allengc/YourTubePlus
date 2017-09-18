@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="name.mikanoshi.yourtubeplus"
-    android:versionCode="13"
-    android:versionName="12.23.60">
+    android:versionCode="12"
+    android:versionName="12.36.55">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="25" />
+        android:targetSdkVersion="26" />
 
     <application
         android:icon="@drawable/ic_launcher"

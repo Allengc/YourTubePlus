@@ -41,12 +41,12 @@ public class XposedMod implements IXposedHookLoadPackage {
 	}
 	
 	byte[] getEndpoint(ClassLoader clsldr, String pane) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("qff", clsldr), "a", pane);
-		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("adnp", clsldr), "toByteArray", paneObj);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("sqy", clsldr), "a", pane);
+		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("ahai", clsldr), "toByteArray", paneObj);
 	}
 /*	
 	void openPane(ClassLoader clsldr, String pane, Object wwActivity) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("qff", clsldr), "a", pane);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("rgc", clsldr), "a", pane);
 		Object paneParcelable = XposedHelpers.callStaticMethod(XposedHelpers.findClass("edz", clsldr), "a", paneObj, true);
 		XposedHelpers.callMethod(wwActivity, "b", paneParcelable);
 	}
@@ -142,8 +142,8 @@ public class XposedMod implements IXposedHookLoadPackage {
 		};
 
 		try {
-			findAndHookMethod("oxt", lpparam.classLoader, "a", int.class, deviceSupportHook);
-			findAndHookMethod("oxt", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
+			findAndHookMethod("ris", lpparam.classLoader, "a", int.class, deviceSupportHook);
+			findAndHookMethod("ris", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
 		} catch(Throwable t)  {
 			XposedBridge.log(t);
 		}
@@ -165,12 +165,12 @@ public class XposedMod implements IXposedHookLoadPackage {
 		// Auto repeat
 
 		// Video ended
-		findAndHookMethod("eho", lpparam.classLoader, "W", new XC_MethodHook() {
+		findAndHookMethod("eot", lpparam.classLoader, "R", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				prefs.reload();
 				if (prefs.getBoolean(PREF_AUTOLOOP, false))
-				callMethod(getObjectField(param.thisObject, "az"), "a"); // Play video again
+				callMethod(getObjectField(param.thisObject, "aA"), "a"); // Play video again
 			}
 		});
 
@@ -190,7 +190,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 
 		// We don't want to override the resolution when it's manually changed by the user, so we need to know
 		// if the video was just opened (in which case the next time the resolution is set would be automatic) or not.
-		findAndHookMethod("eho", lpparam.classLoader, "V", new XC_MethodHook() {
+		findAndHookMethod("eot", lpparam.classLoader, "Q", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//XposedBridge.log("sNewVideo = true");
@@ -199,13 +199,13 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 /*		
 		// Rotate
-		findAndHookMethod("eho", lpparam.classLoader, "a", "cza", "cza", new XC_MethodHook() {
+		findAndHookMethod("eov", lpparam.classLoader, "a", "cza", "cza", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {}
 		});
 */
 		// We also want to get a list of the available qualities for this video, because the one that is passed below is localized, so not comparable easily.
-		findAndHookMethod("wmz", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("zhm", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if ((Integer)param.args[2] == 0) {
@@ -219,7 +219,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 
 		// Override the default quality
-		findAndHookMethod("gnb", lpparam.classLoader, "a", "qjq[]", int.class, new XC_MethodHook() {
+		findAndHookMethod("hbd", lpparam.classLoader, "a", "svm[]", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (sNewVideo) {
@@ -250,7 +250,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 						not the *actual* quality. */
 
 					// This method is the one called when the user presses the button, and actually causes the quality to change.
-					callMethod(getObjectField(param.thisObject, "X"), "a", quality);
+					callMethod(getObjectField(param.thisObject, "Z"), "a", quality);
 					//XposedBridge.log("New quality: " + String.valueOf(quality));
 				}    
 			}

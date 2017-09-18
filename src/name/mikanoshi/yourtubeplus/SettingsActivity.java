@@ -4,20 +4,28 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
+
 import name.mikanoshi.yourtubeplus.R;
 
 public class SettingsActivity extends Activity {
@@ -46,11 +54,11 @@ public class SettingsActivity extends Activity {
 	}
 
 	public static class PrefsFragment extends PreferenceFragment {
+		@SuppressWarnings("deprecation")
 		@Override
 		@SuppressLint("InflateParams")
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			getPreferenceManager().setSharedPreferencesMode(1);
 			addPreferencesFromResource(R.xml.preferences);
 
 			ListPreference defaultPanePref = (ListPreference) findPreference("pref_default_pane");
@@ -126,6 +134,28 @@ public class SettingsActivity extends Activity {
 			
 			dialogBuilder.setView(dialogView);
 			aboutdlg = dialogBuilder.create();
+		}
+
+		@Override
+		public void onPause() {
+			super.onPause();
+
+			// Set preferences permissions to be world readable
+			// Workaround for Android N and above since MODE_WORLD_READABLE will cause security exception and FC.
+			final File dataDir = new File(getActivity().getApplicationInfo().dataDir);
+			final File prefsDir = new File(dataDir, "shared_prefs");
+			final File prefsFile = new File(prefsDir, getPreferenceManager().getSharedPreferencesName() + ".xml");
+
+			if (prefsFile.exists()) {
+				dataDir.setReadable(true, false);
+				dataDir.setExecutable(true, false);
+
+				prefsDir.setReadable(true, false);
+				prefsDir.setExecutable(true, false);
+
+				prefsFile.setReadable(true, false);
+				prefsFile.setExecutable(true, false);
+			}
 		}
 	}
 }

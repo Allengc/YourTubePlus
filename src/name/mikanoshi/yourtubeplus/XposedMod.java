@@ -41,8 +41,8 @@ public class XposedMod implements IXposedHookLoadPackage {
 	}
 	
 	byte[] getEndpoint(ClassLoader clsldr, String pane) {
-		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("sqy", clsldr), "a", pane);
-		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("ahai", clsldr), "toByteArray", paneObj);
+		Object paneObj = XposedHelpers.callStaticMethod(XposedHelpers.findClass("ssm", clsldr), "a", pane);
+		return (byte[])XposedHelpers.callStaticMethod(XposedHelpers.findClass("ahgn", clsldr), "toByteArray", paneObj);
 	}
 /*	
 	void openPane(ClassLoader clsldr, String pane, Object wwActivity) {
@@ -142,8 +142,8 @@ public class XposedMod implements IXposedHookLoadPackage {
 		};
 
 		try {
-			findAndHookMethod("ris", lpparam.classLoader, "a", int.class, deviceSupportHook);
-			findAndHookMethod("ris", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
+			findAndHookMethod("rkv", lpparam.classLoader, "a", int.class, deviceSupportHook);
+			findAndHookMethod("rkv", lpparam.classLoader, "a", Context.class, int.class, deviceSupportHook);
 		} catch(Throwable t)  {
 			XposedBridge.log(t);
 		}
@@ -165,7 +165,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		// Auto repeat
 
 		// Video ended
-		findAndHookMethod("eot", lpparam.classLoader, "R", new XC_MethodHook() {
+		findAndHookMethod("eqg", lpparam.classLoader, "R", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				prefs.reload();
@@ -190,7 +190,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 
 		// We don't want to override the resolution when it's manually changed by the user, so we need to know
 		// if the video was just opened (in which case the next time the resolution is set would be automatic) or not.
-		findAndHookMethod("eot", lpparam.classLoader, "Q", new XC_MethodHook() {
+		findAndHookMethod("eqg", lpparam.classLoader, "Q", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//XposedBridge.log("sNewVideo = true");
@@ -205,7 +205,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 */
 		// We also want to get a list of the available qualities for this video, because the one that is passed below is localized, so not comparable easily.
-		findAndHookMethod("zhm", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("zkc", lpparam.classLoader, "a", Class.class, Object.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if ((Integer)param.args[2] == 0) {
@@ -219,7 +219,7 @@ public class XposedMod implements IXposedHookLoadPackage {
 		});
 
 		// Override the default quality
-		findAndHookMethod("hbd", lpparam.classLoader, "a", "svm[]", int.class, new XC_MethodHook() {
+		findAndHookMethod("hcj", lpparam.classLoader, "a", "sxa[]", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (sNewVideo) {
